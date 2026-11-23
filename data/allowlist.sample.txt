@@ -1,5 +1,6 @@
 # One host (or host/path) per line. Copy to allowlist.txt and edit for your deploy.
-# Examples:
+# Smoke-test host (dam-updater admin "Test proxy" button):
+example.com
 www.example.com
 # *.example.org
 # example.com/api/
