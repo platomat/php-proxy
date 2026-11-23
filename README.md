@@ -37,6 +37,25 @@ php -S 0.0.0.0:8443 -t .   # or nginx/caddy with TLS on :8443
 
 Point the vhost document root at this directory (`index.php`).
 
+### Smoke test (curl)
+
+Target host must be on the allowlist (e.g. `example.com` in `data/allowlist.txt`).
+
+```bash
+curl -sS -X POST 'http://127.0.0.1:8443/' \
+  -H "Authorization: Bearer $(php -r 'echo (require "config/config.php")["api_key"];')" \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "meta": { "cache_ttl": 0, "timeout": 15, "ssl_verify": true },
+    "payload": {
+      "url": "https://example.com/",
+      "method": "GET",
+      "headers": ["User-Agent: curl-test", "Accept: text/html"],
+      "body": null
+    }
+  }'
+```
+
 ## Client
 
 ```php
