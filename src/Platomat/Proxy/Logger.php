@@ -3,7 +3,10 @@
 namespace Platomat\Proxy;
 
 /**
- * Thin error_log() wrapper with level filter.
+ * Level-filtered logger.
+ *
+ * Default destination: project logs/proxy.log (via config log_file).
+ * Falls back to error_log() when log_file is empty.
  *
  * Levels (ascending verbosity): off < error < warning < info < debug
  */
@@ -19,15 +22,19 @@ final class Logger {
 
 	private string $prefix;
 
-	public function __construct( string $level = 'warning', string $prefix = 'php-proxy' ) {
+	private string $file;
+
+	public function __construct( string $level = 'warning', string $prefix = 'php-proxy', string $file = '' ) {
 		$this->level  = self::parseLevel( $level );
 		$this->prefix = $prefix;
+		$this->file   = $file;
 	}
 
 	public static function fromConfig( array $config ): self {
 		$level  = (string) ( $config['log_level'] ?? 'warning' );
 		$prefix = (string) ( $config['log_prefix'] ?? 'php-proxy' );
-		return new self( $level, $prefix !== '' ? $prefix : 'php-proxy' );
+		$file   = (string) ( $config['log_file'] ?? '' );
+		return new self( $level, $prefix !== '' ? $prefix : 'php-proxy', $file );
 	}
 
 	public function error( string $message, array $context = [] ): void {
@@ -53,14 +60,27 @@ final class Logger {
 		if ( $this->level < $minLevel || $this->level === self::OFF ) {
 			return;
 		}
-		$line = '[' . $this->prefix . '][' . $label . '] ' . $message;
+		$line = date( 'c' ) . ' [' . $this->prefix . '][' . $label . '] ' . $message;
 		if ( $context !== [] ) {
 			$encoded = json_encode( $context, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
 			if ( $encoded !== false ) {
 				$line .= ' ' . $encoded;
 			}
 		}
-		error_log( $line );
+		$line .= "\n";
+
+		if ( $this->file !== '' ) {
+			$dir = dirname( $this->file );
+			if ( ! is_dir( $dir ) ) {
+				@mkdir( $dir, 0755, true );
+			}
+			if ( @file_put_contents( $this->file, $line, FILE_APPEND | LOCK_EX ) !== false ) {
+				return;
+			}
+			// Fall through to error_log if file write fails
+		}
+
+		error_log( rtrim( $line ) );
 	}
 
 	public static function parseLevel( string $level ): int {

@@ -25,8 +25,10 @@ return [
 	// Cap client-requested cache_ttl
 	'max_cache_ttl' => 3600,
 
-	// error_log() verbosity: off | error | warning | info | debug
+	// Logging: off | error | warning | info | debug
 	// warning = auth/allowlist/bad request; info = each fetch + cache hit; debug = fetch start
 	'log_level'  => 'info',
 	'log_prefix' => 'php-proxy',
+	// Dedicated file (recommended). Empty = PHP error_log() only.
+	'log_file'   => $root . 'logs' . DIRECTORY_SEPARATOR . 'proxy.log',
 ];

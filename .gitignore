@@ -3,8 +3,11 @@
 /config/config.php
 /data/allowlist.txt
 /tmp/
+/logs/*
+!/logs/.gitkeep
 /.env
 *.log
+
 .idea/
 .vscode/
 *.code-workspace

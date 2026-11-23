@@ -78,11 +78,12 @@ if ($res->ok) {
 
 ## Logging
 
-Server writes to PHP `error_log()` (Caddy/php-fpm journal or `php.ini` `error_log`).
+By default the server appends to `logs/proxy.log` (directory is created if missing). Ensure the PHP-FPM user can write there (`chown www-data logs`).
 
 ```php
 'log_level'  => 'info',   // off | error | warning | info | debug
 'log_prefix' => 'php-proxy',
+'log_file'   => __DIR__ . '/../logs/proxy.log',  // empty = PHP error_log() only
 ```
 
 | Level | What |
@@ -92,7 +93,7 @@ Server writes to PHP `error_log()` (Caddy/php-fpm journal or `php.ini` `error_lo
 | `info` | each request, cache hit, successful fetch (status, duration, bytes) |
 | `debug` | fetch start |
 
-URLs in logs are scheme+host+path only (no query string).
+URLs in logs are scheme+host+path only (no query string). Tail with `tail -f logs/proxy.log`.
 
 ## Security
 
