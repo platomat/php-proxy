@@ -24,4 +24,9 @@ return [
 
 	// Cap client-requested cache_ttl
 	'max_cache_ttl' => 3600,
+
+	// error_log() verbosity: off | error | warning | info | debug
+	// warning = auth/allowlist/bad request; info = each fetch + cache hit; debug = fetch start
+	'log_level'  => 'info',
+	'log_prefix' => 'php-proxy',
 ];

@@ -76,6 +76,24 @@ if ($res->ok) {
 }
 ```
 
+## Logging
+
+Server writes to PHP `error_log()` (Caddy/php-fpm journal or `php.ini` `error_log`).
+
+```php
+'log_level'  => 'info',   // off | error | warning | info | debug
+'log_prefix' => 'php-proxy',
+```
+
+| Level | What |
+|-------|------|
+| `error` | fetch failures, empty allowlist, uncaught errors |
+| `warning` | auth fail, bad request, host not allowlisted |
+| `info` | each request, cache hit, successful fetch (status, duration, bytes) |
+| `debug` | fetch start |
+
+URLs in logs are scheme+host+path only (no query string).
+
 ## Security
 
 - Bearer API key required
