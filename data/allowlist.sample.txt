@@ -1,0 +1,5 @@
+# One host (or host/path) per line. Copy to allowlist.txt and edit for your deploy.
+# Examples:
+www.example.com
+# *.example.org
+# example.com/api/
