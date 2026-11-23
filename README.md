@@ -2,7 +2,7 @@
 
 Standalone PHP **server + client** to relay HTTP fetches through a trusted egress host.
 
-Not a WordPress plugin. Install via Composer into any PHP app that needs outbound HTTP via a relay.
+Install via Composer into any PHP app that needs outbound HTTP via a relay.
 
 ## Request shape
 
